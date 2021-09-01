@@ -23,7 +23,8 @@ struct UnexpectedEventException : std::runtime_error
 };
 
 class Controller : public IEventHandler
-{
+{  
+    struct Segment;
 public:
     Controller(IPort& p_displayPort, IPort& p_foodPort, IPort& p_scorePort, std::string const& p_config);
 
@@ -31,6 +32,12 @@ public:
     Controller& operator=(Controller const& p_rhs) = delete;
 
     void receive(std::unique_ptr<Event> e) override;
+    bool checkCrashWithSnake(const Segment& newHead);
+    bool checkOutOfMap(const Segment& newHead);
+    void updateSnakePosition(Segment& newHead, bool& lost);
+    void changeDirection(const std::unique_ptr<Event>& e);
+    void checkReceiveFoodAndPlaceNew(const std::unique_ptr<Event>& e);
+    void checkIfNewFoodCollitedWithSnake(const std::unique_ptr<Event>& e);
 
 private:
     struct Segment
@@ -50,13 +57,6 @@ private:
     Direction m_currentDirection;
     std::list<Segment> m_segments;
     
-    public:
-    bool checkCrashWithSnake(const Segment& newHead);
-    bool checkOutOfMap(const Segment& newHead);
-    void updateSnakePosition(Segment& newHead, bool& lost);
-    void changeDirection(const std::unique_ptr<Event>& e);
-    void checkReceiveFoodAndPlaceNew(const std::unique_ptr<Event>& e);
-    void checkIfNewFoodCollitedWithSnake(const std::unique_ptr<Event>& e);
 };
 
 } // namespace Snake

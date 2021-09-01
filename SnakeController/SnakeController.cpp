@@ -83,6 +83,8 @@ bool Controller::checkOutOfMap(const Segment& newHead)
 
 void Controller::updateSnakePosition(Segment& newHead, bool& lost)
 {
+    if(lost)
+        return;
     if (std::make_pair(newHead.x, newHead.y) == m_foodPosition) {
         m_scorePort.send(std::make_unique<EventT<ScoreInd>>());
         m_foodPort.send(std::make_unique<EventT<FoodReq>>());
@@ -180,10 +182,7 @@ void Controller::receive(std::unique_ptr<Event> e)
         newHead.ttl = currentHead.ttl;
 
         bool lost = checkCrashWithSnake(newHead);        
-        //std::pair = std::make_pair(newHead.x, newHead.y)
-        if (not lost) {
-            updateSnakePosition(newHead, lost);
-        }
+        updateSnakePosition(newHead, lost);
 
         if (not lost) {
             m_segments.push_front(newHead);
