@@ -183,7 +183,6 @@ void Controller::receive(std::unique_ptr<Event> e)
 
         bool lost = checkCrashWithSnake(newHead);        
         updateSnakePosition(newHead, lost);
-
         if (not lost) {
             m_segments.push_front(newHead);
             DisplayInd placeNewHead;
