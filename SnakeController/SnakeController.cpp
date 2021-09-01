@@ -103,6 +103,14 @@ void Controller::updateSnakePosition(Segment& newHead, bool& lost)
     }
 }
 
+void Controller::changeDirection(const std::unique_ptr<Event>& e)
+{
+    auto direction = dynamic_cast<EventT<DirectionInd> const&>(*e)->direction;
+    if ((m_currentDirection & 0b01) != (direction & 0b01)) {
+        m_currentDirection = direction;
+    }
+}
+
 void Controller::receive(std::unique_ptr<Event> e)
 {
     try {
@@ -139,11 +147,8 @@ void Controller::receive(std::unique_ptr<Event> e)
         }
     } catch (std::bad_cast&) {
         try {
-            auto direction = dynamic_cast<EventT<DirectionInd> const&>(*e)->direction;
-
-            if ((m_currentDirection & 0b01) != (direction & 0b01)) {
-                m_currentDirection = direction;
-            }
+            //auto direction = dynamic_cast<EventT<DirectionInd> const&>(*e)->direction;
+            changeDirection(e);
         } catch (std::bad_cast&) {
             try {
                 auto receivedFood = *dynamic_cast<EventT<FoodInd> const&>(*e);
