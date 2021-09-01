@@ -34,6 +34,7 @@ public:
     void receive(std::unique_ptr<Event> e) override;
     bool checkCrashWithSnake(const Segment& newHead);
     bool checkOutOfMap(const Segment& newHead);
+    void updateTailAndHead(Segment& newHead);
     void updateSnakePosition(Segment& newHead, bool& lost);
     void changeDirection(const std::unique_ptr<Event>& e);
     void checkReceiveFoodAndPlaceNew(const std::unique_ptr<Event>& e);

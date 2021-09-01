@@ -81,6 +81,24 @@ bool Controller::checkOutOfMap(const Segment& newHead)
                        newHead.y >= m_mapDimension.second);
 }
 
+void Controller::updateTailAndHead(Segment& newHead)
+{
+    m_segments.push_front(newHead);
+    DisplayInd placeNewHead;
+    placeNewHead.x = newHead.x;
+    placeNewHead.y = newHead.y;
+    placeNewHead.value = Cell_SNAKE;
+
+    m_displayPort.send(std::make_unique<EventT<DisplayInd>>(placeNewHead));
+
+    m_segments.erase(
+        std::remove_if(
+            m_segments.begin(),
+            m_segments.end(),
+                [](auto const& segment){ return not (segment.ttl > 0); }),
+            m_segments.end());
+}
+
 void Controller::updateSnakePosition(Segment& newHead, bool& lost)
 {
     if(lost)
@@ -103,6 +121,9 @@ void Controller::updateSnakePosition(Segment& newHead, bool& lost)
             }
         }
     }
+    if (not lost) {
+            updateTailAndHead(newHead);
+        }
 }
 
 void Controller::changeDirection(const std::unique_ptr<Event>& e)
@@ -183,22 +204,6 @@ void Controller::receive(std::unique_ptr<Event> e)
 
         bool lost = checkCrashWithSnake(newHead);        
         updateSnakePosition(newHead, lost);
-        if (not lost) {
-            m_segments.push_front(newHead);
-            DisplayInd placeNewHead;
-            placeNewHead.x = newHead.x;
-            placeNewHead.y = newHead.y;
-            placeNewHead.value = Cell_SNAKE;
-
-            m_displayPort.send(std::make_unique<EventT<DisplayInd>>(placeNewHead));
-
-            m_segments.erase(
-                std::remove_if(
-                    m_segments.begin(),
-                    m_segments.end(),
-                    [](auto const& segment){ return not (segment.ttl > 0); }),
-                m_segments.end());
-        }
     } catch (std::bad_cast&) {
         try {
             changeDirection(e);
