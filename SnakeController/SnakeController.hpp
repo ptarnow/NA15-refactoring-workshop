@@ -55,6 +55,8 @@ private:
     bool checkOutOfMap(const Segment& newHead);
     void updateSnakePosition(Segment& newHead, bool& lost);
     void changeDirection(const std::unique_ptr<Event>& e);
+    void checkReceiveFoodAndPlaceNew(const std::unique_ptr<Event>& e);
+    void checkIfNewFoodCollitedWithSnake(const std::unique_ptr<Event>& e);
 };
 
 } // namespace Snake
