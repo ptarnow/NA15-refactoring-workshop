@@ -51,8 +51,9 @@ private:
     std::list<Segment> m_segments;
     
     public:
-    bool checkCrashWithSnake(Segment newHead);
-    bool checkOutOfMap(Segment newHead);
+    bool checkCrashWithSnake(const Segment& newHead);
+    bool checkOutOfMap(const Segment& newHead);
+    void updateSnakePosition(Segment& newHead, bool& lost);
 };
 
 } // namespace Snake
