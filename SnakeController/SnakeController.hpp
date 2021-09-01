@@ -49,6 +49,10 @@ private:
 
     Direction m_currentDirection;
     std::list<Segment> m_segments;
+    
+    public:
+    bool checkCrashWithSnake(Segment newHead);
+    bool checkOutOfMap(Segment newHead);
 };
 
 } // namespace Snake
