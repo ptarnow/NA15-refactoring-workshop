@@ -217,19 +217,19 @@ void Controller::receive(std::unique_ptr<Event> e)
 {
     switch (e->getMessageId())
     {
-    case 0x20:
+    case TimeoutInd::MESSAGE_ID:
         handleTimePassed(*static_cast<EventT<TimeoutInd> const&>(*e));
         break;
-    case 0x10:
+    case DirectionInd::MESSAGE_ID:
         handleDirectionChange(*static_cast<EventT<DirectionInd> const&>(*e));
         break;
-    case 0x40:
+    case FoodInd::MESSAGE_ID:
         handleFoodPositionChange(*static_cast<EventT<FoodInd> const&>(*e));
         break;
-    case 0x41:
+    case FoodReq::MESSAGE_ID:
         handleFoodPositionChange(*static_cast<EventT<FoodInd> const&>(*e));
         break;
-    case 0x42:
+    case FoodResp::MESSAGE_ID:
         handleNewFood(*static_cast<EventT<FoodResp> const&>(*e));
         break;
     default:
